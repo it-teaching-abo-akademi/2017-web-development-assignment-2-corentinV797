@@ -1,0 +1,40 @@
+#informations {
+	width: 750px;
+	border-style:solid;
+	border-width: thin;
+	border-color:black;
+}
+
+#barCodeBox {
+	margin: auto;
+	margin-bottom: 20px;
+	text-align: center;
+	width: 400px;
+	height: 75px;
+	border-style:solid;
+	border-width: thin;
+	border-color:black;
+}
+
+#iban {
+	display:inline-block;
+	text-align: left;
+	margin-left: 30px;
+}
+
+#amount {
+	display:inline-block;
+	margin-left: 200px;
+}
+
+#ref {
+	display:inline-block;
+	text-align: left;
+	margin-left: 30px;
+
+}
+
+#date {
+	display:inline-block;
+	margin-left: 200px;
+}

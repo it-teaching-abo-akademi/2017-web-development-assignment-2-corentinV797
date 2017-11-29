@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+	<script src="ex1.js"></script>
+	<link rel="stylesheet" href="ex1.css">
+</head>
+<body>
+
+
+	<form>
+		Virtual bar code:
+		<input id="code" type="text" name="code"><br>
+	</form> 
+
+	<button type="button" id="decode">Decode</button>
+	<br>
+	<button type="button" id="hideAndShow">Hide</button>
+	<br>
+	<div id="informations">
+		<div id="iban">Payee's IBAN:</div>
+		<div id="amount">Amount to be paid:</div>
+		<br>
+		<div id="ref">Payment reference:</div>
+		<div id="date">Due date:</div>
+
+		<div id="barCodeBox">
+			<p id="barCode"> BAR CODE HERE</p>
+		</div>
+	</div>	
+
+	<p id="textcode"></p>
+
+</body>
+</html>
