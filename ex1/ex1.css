@@ -1,19 +1,27 @@
 #informations {
-	width: 750px;
+	width: 1000px;
 	border-style:solid;
 	border-width: thin;
 	border-color:black;
 }
 
 #barCodeBox {
+	display: table; 
 	margin: auto;
 	margin-bottom: 20px;
 	text-align: center;
-	width: 400px;
-	height: 75px;
+	width: 600px;
+	height: 100px;
 	border-style:solid;
 	border-width: thin;
 	border-color:black;
+}
+
+#barcode {
+	display: table-cell;
+	margin: auto;
+    height: 100px; 
+    width: 600px;
 }
 
 #iban {
