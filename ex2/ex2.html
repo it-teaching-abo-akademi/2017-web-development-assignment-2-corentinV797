@@ -3,10 +3,44 @@
 <head>
 	<meta charset="UTF-8">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDdNbozJSyhw3-AkAIaC8j2QFCCboHUjyQ"></script>
 	<script src="ex2.js"></script>
-	<link rel="stylesheet" href="ex1.css">
+	<link rel="stylesheet" href="ex2.css">
 </head>
 <body>
+	<label for="countries">Select your country:</label>
+
+	<select id="countries">
+		<option value="fi">Finland</option>
+		<option value="fr">France</option>
+		<option value="de">Germany</option>
+		<option value="se">Sweden</option>
+	</select>
+
+
+	<form>
+		ZIP code:
+		<input id="code" type="text" name="code"><br>
+	</form>
+
+	<button id="search">Search</button>
+
 	
+
+	<div id="history">
+		<h3>History of the last 10 searches</h3>
+		<p id="demo"></p>
+	</div>
+
+	<table id="places">
+		<tr>
+			<th>Place name</th>
+			<th>Longitude</th>
+			<th>Latitude</th>
+		</tr>
+	</table>
+
+	<div id="googleMap"></div>
+
 </body>
 </html>
