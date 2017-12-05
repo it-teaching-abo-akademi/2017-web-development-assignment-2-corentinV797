@@ -9,3 +9,15 @@ table {
 table, th, td {
     border: 1px solid black;
 }
+
+#history {
+	display:inline-block;
+	vertical-align: top;
+	margin-left: 100px;
+	border: 1px solid black;
+	padding: 10px;
+}
+
+#component {
+	display:inline-block;
+}

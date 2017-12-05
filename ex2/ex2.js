@@ -15,6 +15,10 @@ $(document).ready(function(){
 	$("#search").click(function(){	
 		var country = $( "#countries" ).val();
 		var code = $("#code").val();
+		code = code.replace(/\s+/g, '');
+		if( !/^\d+$/.test(code)) {
+			return;
+		}
 		var lng;
 		var lat;
 
@@ -22,16 +26,37 @@ $(document).ready(function(){
 		client.open("GET", "http://api.zippopotam.us/" + country + "/" + code, true);
 		client.onreadystatechange = function() {
 			if(client.readyState == 4) {
+
 				var obj = JSON.parse(client.responseText);
+
+				if(typeof obj.country === 'undefined'){
+					return;
+				}
 				var places = obj.places;
 
-				a1 = JSON.parse(localStorage["request"]);
+				if (typeof localStorage["request"] === 'undefined'){
+					var a1 = new Array();
+				}else{
+					a1 = JSON.parse(localStorage["request"]);
+				}
 
-				//var a1 = new Array();
+				
 
 				var s = obj.country + ' - ' + code;
 
-				addInArray(a1, s);
+				if (a1.length < 10) {
+					a1.push(s);
+				}else {
+					var a2 = new Array();
+					a2[0] = s;
+					for (var i = 0; i < a1.length-1; i++) {
+						a2[i+1]=a1[i];
+					};
+
+					for (var i = 0; i < a1.length; i++) {
+						a1[i] = a2[i];
+					};
+				};
 
 				localStorage["request"] = JSON.stringify(a1);
 
@@ -63,31 +88,15 @@ $(document).ready(function(){
 	}
 
 	function displayRequest() {
-		requestStorage = JSON.parse(localStorage["request"]);
-		var s = "";
-		for (var i = 0; i < requestStorage.length; i++) {
-			s = s + requestStorage[i] + '<br>';
-		};
-		$( "#demo" ).html( s );
-		console.log(s);
-
-	}
-
-	function addInArray(a, s){
-		//if (a.length < 10) {
-			a.push(s);
-		/*}else {
-			a1 = JSON.parse(localStorage["request"]);
-			var a2 = new Array();
-			a2[0] = s;
-			for (var i = 0; i < a1.length-1; i++) {
-				a2[i+1]=a1[i];
+		if (typeof localStorage["request"] === 'undefined'){
+			return
+		}else{
+			requestStorage = JSON.parse(localStorage["request"]);
+			var s = "";
+			for (var i = 0; i < requestStorage.length; i++) {
+				s = s + requestStorage[i] + '<br>';
 			};
-			
-
-			console.log(a2);
-			localStorage["request"] = JSON.stringify(a2);
-			displayRequest();
-		};*/
+			$( "#demo" ).html( s );
+		}
 	}
 });
