@@ -1,7 +1,11 @@
 #googleMap {
-	height: 400px;
-	width: 800px;
+	height: 700px;
+	width: 1600px;
 }
 button {
+	display: inline-block;
+}
+
+#busline, #errorMessage {
 	display: inline-block;
 }

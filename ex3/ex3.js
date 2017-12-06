@@ -2,39 +2,27 @@ $(document).ready(function(){
 
 	var map;
 	var routeLine;
+	var markerArray = new Array();
+
 
 	function initMap() {
 		map = new google.maps.Map(document.getElementById('googleMap'), {
-			zoom: 11,
+			zoom: 13,
 			center: {lat: 60.4502, lng: 22.276}
 		});
 	}
 
 	initMap();
 
-	var client = new XMLHttpRequest();
-	client.open("GET", "http://data.foli.fi/gtfs/routes", true);
-	client.onreadystatechange = function() {
-		if(client.readyState == 4) {
-			var obj = JSON.parse(client.responseText);
+	getAllLines();	
 
-			for (var i = 0; i < obj.length; i++) {
-				var route_id = obj[i].route_id;
-				var route_name = obj[i].route_short_name;
+	$("#showbus").click(showBus);
 
-				$('#busline').append($('<option>', {
-					value: route_id,
-					text: route_name
-				}));
-			};
-		};
-	};
-	client.send();
+	$("#refresh").click(showBus);
 
 
 	$("#showroute").click(function(){
 		var route_id = $("#busline").val();
-		console.log(route_id);
 
 		var client = new XMLHttpRequest();
 		client.open("GET", "http://data.foli.fi/gtfs/trips/all", true);
@@ -71,6 +59,12 @@ $(document).ready(function(){
 						client.onreadystatechange = function() {
 							if(client.readyState == 4) {
 								var obj = JSON.parse(client.responseText);
+								if(obj.hasOwnProperty('success')){
+									$("#errorMessage").text("No route found for this bus line");
+								}else{
+									$("#errorMessage").text("");
+								}
+
 								var routeCoordinates = new Array();
 								var centerRouteCoordinates;
 
@@ -109,14 +103,67 @@ $(document).ready(function(){
 		client.send();		
 	});
 
-function placeMarker(a,b) {
-	var marker;
-	marker = new google.maps.Marker({
-		map: map,
-		position: {lat:parseFloat(b), lng:parseFloat(a)}
-	});
+	function getAllLines(){
+		var client = new XMLHttpRequest();
+		client.open("GET", "http://data.foli.fi/gtfs/routes", true);
+		client.onreadystatechange = function() {
+			if(client.readyState == 4) {
+				var obj = JSON.parse(client.responseText);
 
-	marker.setMap(map);
-	map.setCenter(marker.getPosition());
-}
+				for (var i = 0; i < obj.length; i++) {
+					var route_id = obj[i].route_id;
+					var route_name = obj[i].route_short_name;
+
+					$('#busline').append($('<option>', {
+						value: route_id,
+						text: route_name
+					},'<\option>'));
+				};
+			};
+		};
+		client.send();
+	}
+
+	function showBus(){
+		var route_name = $("#busline option:selected").text();
+
+		clearMarkers();
+
+		var client = new XMLHttpRequest();
+		client.open("GET", "http://data.foli.fi/siri/vm", true);
+		client.onreadystatechange = function() {
+			if(client.readyState == 4) {
+				var obj = JSON.parse(client.responseText);
+				var vehicules = new Array();
+				vehicules = obj.result.vehicles;
+				for (const prop in vehicules) {
+				    if(vehicules[prop].publishedlinename == route_name){
+				    	placeMarker(vehicules[prop].longitude,vehicules[prop].latitude);				    	
+				    }
+				}
+				
+			};
+		};
+		client.send();
+	}
+
+	function placeMarker(a,b) {
+		var marker;
+		marker = new google.maps.Marker({
+			map: map,
+			position: {lat:parseFloat(b), lng:parseFloat(a)}
+		});
+
+		markerArray.push(marker);
+
+		marker.setMap(map);
+		map.setCenter(marker.getPosition());
+	}
+
+	function clearMarkers(){
+		for (var i = 0; i < markerArray.length; i++) {
+			markerArray[i].setMap(null);
+		};
+		markerArray = [];
+	}
 });
