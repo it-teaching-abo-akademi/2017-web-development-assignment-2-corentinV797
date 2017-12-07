@@ -4,6 +4,8 @@ $(document).ready(function(){
 	var markerArray = new Array(); //array that stores markers of each request
 	var routeLine; //variable is global so there is only one route displayed at a time
 
+	
+	var url = new Wrapper(callback); //wrapper used to wait for value definition (sse below)
 
 	function initMap() {
 		map = new google.maps.Map(document.getElementById('googleMap'), {
@@ -14,7 +16,8 @@ $(document).ready(function(){
 
 	initMap();
 
-	getAllLines(); //get all lines available from Foli api and add them in busline select	
+	getSecureUrl(); //get the proper https url
+
 
 	$("#showbus").click(showBus);
 
@@ -25,7 +28,7 @@ $(document).ready(function(){
 		var route_id = $("#busline").val(); //get route_id of the selected route
 
 		var client = new XMLHttpRequest();
-		client.open("GET", "https://data.foli.fi/gtfs/trips/all", true); //get request that retrieves all trips from Foli API
+		client.open("GET", url.get() + "trips/all", true); //get request that retrieves all trips from Foli API
 		client.onreadystatechange = function() {
 			if(client.readyState == 4) {
 				var obj = JSON.parse(client.responseText);
@@ -39,7 +42,7 @@ $(document).ready(function(){
 						shape_idArray.push(obj[i].shape_id); //add the shape_id of the trip
 					}
 				};
-				client.open("GET", "https://data.foli.fi/gtfs/shapes", true); //get request that retrieves all the shapes that actually have map coordinates.
+				client.open("GET", url.get() + "shapes", true); //get request that retrieves all the shapes that actually have map coordinates.
 				client.onreadystatechange = function() {
 					if(client.readyState == 4) {
 						var obj = JSON.parse(client.responseText);
@@ -53,7 +56,7 @@ $(document).ready(function(){
 							};
 						};
 
-						client.open("GET", "https://data.foli.fi/gtfs/shapes/" + shape_id, true); //get request that retrieves the corresponding coordinates of the shape
+						client.open("GET", url.get() + "shapes/" + shape_id, true); //get request that retrieves the corresponding coordinates of the shape
 						client.onreadystatechange = function() {
 							if(client.readyState == 4) {
 								var obj = JSON.parse(client.responseText);
@@ -103,7 +106,7 @@ $(document).ready(function(){
 
 	function getAllLines(){
 		var client = new XMLHttpRequest();
-		client.open("GET", "https://data.foli.fi/gtfs/routes", true); //get request that retrieves all routes
+		client.open("GET", url.get() + "routes", true); //get request that retrieves all routes
 		client.onreadystatechange = function() {
 			if(client.readyState == 4) {
 				var obj = JSON.parse(client.responseText);
@@ -122,6 +125,18 @@ $(document).ready(function(){
 		client.send();
 	}
 
+	function getSecureUrl() {
+		var client = new XMLHttpRequest();
+		client.open("GET", "https://data.foli.fi/gtfs/", true);
+		client.onreadystatechange = function() {
+			if(client.readyState == 4) {
+				var obj = JSON.parse(client.responseText);
+				url.set("https://data.foli.fi" + obj.gtfspath + "/" + obj.latest + "/");
+			};
+		};
+		client.send();
+	}
+
 	function showBus(){ //show on the map buses corresponding to the selected bus line
 		var route_name = $("#busline option:selected").text(); //get route_name
 
@@ -135,7 +150,7 @@ $(document).ready(function(){
 				var vehicules = new Array();
 				vehicules = obj.result.vehicles; //array that contains all the buses
 				for (const prop in vehicules) { //for each bus check if its route attribute corresponds to route_name and if so place it on the map
-				    if(vehicules[prop].publishedlinename == route_name){
+					if(vehicules[prop].publishedlinename == route_name){
 				    	placeMarker(vehicules[prop].longitude,vehicules[prop].latitude); //place marker on the map				    	
 				    }
 				}
@@ -164,4 +179,20 @@ $(document).ready(function(){
 		};
 		markerArray = [];
 	}
+
+
+	function Wrapper(callback) {
+	    var value;
+	    this.set = function(v) {
+	        value = v;
+	        callback(this);
+	    }
+	    this.get = function() {
+	        return value;
+	    }  
+	}
+
+	function callback(wrapper) {
+    	getAllLines(); //get lines when url value is defined
+	}	
 });
