@@ -24,7 +24,7 @@ $(document).ready(function(){
 		}
 
 		var client = new XMLHttpRequest(); 
-		client.open("GET", "http://api.zippopotam.us/" + country + "/" + code, true); //get request, use the zippopatam api with the input country and code
+		client.open("GET", "https://api.zippopotam.us/" + country + "/" + code, true); //get request, use the zippopatam api with the input country and code
 		client.onreadystatechange = function() {
 			if(client.readyState == 4) {
 

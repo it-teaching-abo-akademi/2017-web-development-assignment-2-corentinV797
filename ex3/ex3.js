@@ -25,7 +25,7 @@ $(document).ready(function(){
 		var route_id = $("#busline").val(); //get route_id of the selected route
 
 		var client = new XMLHttpRequest();
-		client.open("GET", "http://data.foli.fi/gtfs/trips/all", true); //get request that retrieves all trips from Foli API
+		client.open("GET", "https://data.foli.fi/gtfs/trips/all", true); //get request that retrieves all trips from Foli API
 		client.onreadystatechange = function() {
 			if(client.readyState == 4) {
 				var obj = JSON.parse(client.responseText);
@@ -39,7 +39,7 @@ $(document).ready(function(){
 						shape_idArray.push(obj[i].shape_id); //add the shape_id of the trip
 					}
 				};
-				client.open("GET", "http://data.foli.fi/gtfs/shapes", true); //get request that retrieves all the shapes that actually have map coordinates.
+				client.open("GET", "https://data.foli.fi/gtfs/shapes", true); //get request that retrieves all the shapes that actually have map coordinates.
 				client.onreadystatechange = function() {
 					if(client.readyState == 4) {
 						var obj = JSON.parse(client.responseText);
@@ -53,7 +53,7 @@ $(document).ready(function(){
 							};
 						};
 
-						client.open("GET", "http://data.foli.fi/gtfs/shapes/" + shape_id, true); //get request that retrieves the corresponding coordinates of the shape
+						client.open("GET", "https://data.foli.fi/gtfs/shapes/" + shape_id, true); //get request that retrieves the corresponding coordinates of the shape
 						client.onreadystatechange = function() {
 							if(client.readyState == 4) {
 								var obj = JSON.parse(client.responseText);
@@ -103,7 +103,7 @@ $(document).ready(function(){
 
 	function getAllLines(){
 		var client = new XMLHttpRequest();
-		client.open("GET", "http://data.foli.fi/gtfs/routes", true); //get request that retrieves all routes
+		client.open("GET", "https://data.foli.fi/gtfs/routes", true); //get request that retrieves all routes
 		client.onreadystatechange = function() {
 			if(client.readyState == 4) {
 				var obj = JSON.parse(client.responseText);
@@ -128,7 +128,7 @@ $(document).ready(function(){
 		clearMarkers(); //clear all previous markers before each request
 
 		var client = new XMLHttpRequest();
-		client.open("GET", "http://data.foli.fi/siri/vm", true); //get request that retrieves all the buses available
+		client.open("GET", "https://data.foli.fi/siri/vm", true); //get request that retrieves all the buses available
 		client.onreadystatechange = function() {
 			if(client.readyState == 4) {
 				var obj = JSON.parse(client.responseText);
